@@ -148,15 +148,16 @@ import noppes.npcs.roles.RoleFollower;
 import noppes.npcs.roles.RoleInterface;
 import noppes.npcs.util.GameProfileAlt;
 
-public abstract class EntityNPCInterface extends EntityCreature implements IEntityAdditionalSpawnData, ICommandSender, IRangedAttackMob, IAnimals {
-	public static final DataParameter<Boolean> Attacking;
-	protected static final DataParameter<Integer> Animation;
-	private static final DataParameter<String> RoleData;
-	private static final DataParameter<String> JobData;
-	private static final DataParameter<Integer> FactionData;
-	private static final DataParameter<Boolean> Walking;
-	private static final DataParameter<Boolean> Interacting;
-	private static final DataParameter<Boolean> IsDead;
+public abstract class EntityNPCInterface extends EntityCreature
+		implements IEntityAdditionalSpawnData, ICommandSender, IRangedAttackMob, IAnimals {
+	public static final DataParameter Attacking;
+	protected static final DataParameter Animation;
+	private static final DataParameter RoleData;
+	private static final DataParameter JobData;
+	private static final DataParameter FactionData;
+	private static final DataParameter Walking;
+	private static final DataParameter Interacting;
+	private static final DataParameter IsDead;
 	public static final GameProfileAlt CommandProfile;
 	public static final GameProfileAlt ChatEventProfile;
 	public static final GameProfileAlt GenericProfile;
@@ -448,8 +449,8 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 						this.cloakUpdate();
 					}
 
-					if (this.currentAnimation != this.dataManager.get(Animation)) {
-						this.currentAnimation = this.dataManager.get(Animation);
+					if (this.currentAnimation != (Integer) this.dataManager.get(Animation)) {
+						this.currentAnimation = (Integer) this.dataManager.get(Animation);
 						this.animationStart = this.ticksExisted;
 						this.updateHitbox();
 					}
@@ -544,7 +545,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 
 	public boolean isInteracting() {
 		if (this.ticksExisted - this.lastInteract < 40
-				|| this.isRemote() && this.dataManager.get(Interacting)) {
+				|| this.isRemote() && (Boolean) this.dataManager.get(Interacting)) {
 			return true;
 		} else {
 			return this.ais.stopAndInteract && !this.interactingEntities.isEmpty()
@@ -1525,7 +1526,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 
 	public boolean isWalking() {
 		return this.ais.getMovingType() != 0 || this.isAttacking() || this.isFollower()
-				|| this.dataManager.get(Walking);
+				|| (Boolean) this.dataManager.get(Walking);
 	}
 
 	public boolean isSneaking() {
@@ -1537,7 +1538,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 	}
 
 	public Faction getFaction() {
-		Faction fac = FactionController.instance.getFaction(this.dataManager.get(FactionData));
+		Faction fac = FactionController.instance.getFaction((Integer) this.dataManager.get(FactionData));
 		return fac == null ? FactionController.instance.getFaction(FactionController.instance.getFirstFactionId())
 				: fac;
 	}
@@ -1562,11 +1563,11 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 	}
 
 	public boolean isAttacking() {
-		return this.dataManager.get(Attacking);
+		return (Boolean) this.dataManager.get(Attacking);
 	}
 
 	public boolean isKilled() {
-		return this.isDead || this.dataManager.get(IsDead);
+		return this.isDead || (Boolean) this.dataManager.get(IsDead);
 	}
 
 	public void writeSpawnData(ByteBuf buffer) {
@@ -1728,7 +1729,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 	}
 
 	public String getRoleData() {
-		return this.dataManager.get(RoleData);
+		return (String) this.dataManager.get(RoleData);
 	}
 
 	public void setRoleData(String s) {
@@ -1736,7 +1737,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 	}
 
 	public String getJobData() {
-		return this.dataManager.get(RoleData);
+		return (String) this.dataManager.get(RoleData);
 	}
 
 	public void setJobData(String s) {
